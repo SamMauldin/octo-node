@@ -19,7 +19,7 @@ if (process.argv[2]) {
 
 console.log("Building tools...");
 
-s.bind(cfg.server.port, function() {
+s.bind(cfg.server.port, cfg.server.host, function() {
 
 	console.log("Writing letters...");
 	
