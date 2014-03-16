@@ -70,7 +70,7 @@ commands.err = function(args, rinfo) {
 s.on("message", function(buf, rinfo) {
 	var msg = JSON.parse(buf.toString());
 	if (msg) {
-		if (msg["p2pnode"] == "hello" && msg["cmd"]) {
+		if (msg["p2pnode"] && msg["cmd"]) {
 			if (commands[msg["cmd"]]) {
 				commands[msg["cmd"]](msg["args"], rinfo);
 			}
