@@ -47,7 +47,7 @@ s.on("message", function(buf, rinfo) {
 	if (msg) {
 		if (msg["p2pnode"] && msg["cmd"]) {
 			if (commands[msg["cmd"]]) {
-				commands[msg["cmd"]](msg["args"]);
+				commands[msg["cmd"]](msg["args"], rinfo);
 			}
 		}
 	}
