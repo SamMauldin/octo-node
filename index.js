@@ -120,6 +120,7 @@ commands.peerlist = function(args, rinfo) {
 							ping: true
 						});
 						tools.registerPeer(p.ip, cfg, s);
+						console.log("Registered " + p.ip);
 						console.log("Taking over world with " + peers.length + " friend(s)...");
 					}
 				}
