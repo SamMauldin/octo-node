@@ -48,6 +48,14 @@ commands.register = function(args, rinfo) {
 		}
 	});
 	if (!found) {
+		if (peers.length == cfg.peers.max) {
+			tools.sendToPeer(rinfo.address, cfg.server.port, sock, {
+				"p2pnode": "hello",
+				"cmd": "err",
+				"args": ["Max peers reached"]
+			});
+			return;
+		}
 		peers.push({
 			ip: v.address
 		});
@@ -55,10 +63,14 @@ commands.register = function(args, rinfo) {
 	}
 };
 
+commands.err = function(args, rinfo) {
+	console.log("Error from " + rinfo.address + ": " + args[0]);
+};
+
 s.on("message", function(buf, rinfo) {
 	var msg = JSON.parse(buf.toString());
 	if (msg) {
-		if (msg["p2pnode"] && msg["cmd"]) {
+		if (msg["p2pnode"] == "hello" && msg["cmd"]) {
 			if (commands[msg["cmd"]]) {
 				commands[msg["cmd"]](msg["args"], rinfo);
 			}
