@@ -59,12 +59,33 @@ commands.register = function(args, rinfo) {
 		}
 		
 		peers.push({
-			ip: rinfo.address
+			ip: rinfo.address,
+			ping: true
 		});
 		
 		console.log("Taking over world with " + peers.length + " friend(s)...");
 	}
 };
+
+commands.ping = function(args, rinfo) {
+	peers.forEach(function(v) {
+		if (v.ip == rinfo.address) {
+			tools.sendToPeer(rinfo.address, cfg.server.port, s, {
+				"p2pnode": "hello",
+				"cmd": "pong",
+				"args": []
+			});
+		}
+	});
+}
+
+commands.pong = function(args, rinfo) {
+	peers.forEach(function(v) {
+		if (v.ip == rinfo.address) {
+			v.ping = true;
+		}
+	});
+}
 
 commands.err = function(args, rinfo) {
 	console.log("Error from " + rinfo.address + ": " + args[0]);
@@ -80,3 +101,31 @@ s.on("message", function(buf, rinfo) {
 		}
 	}
 });
+
+setInterval(function() {
+	var newpeers = [];
+	var disconn = false;
+	
+	peers.forEach(function(v) {
+		if (v.ping) {
+			newpeers.push(v);
+			v.ping = false;
+		} else {
+			disconn = true;
+			console.log(v.ip + " disconnected.");
+		}
+	});
+	
+	peers = newpeers;
+	
+	console.log("Taking over world with " + peers.length + " friend(s)...");
+	
+	peers.forEach(function(v) {
+		tools.sendToPeer(rinfo.address, cfg.server.port, s, {
+			"p2pnode": "hello",
+			"cmd": "ping",
+			"args": []
+		});
+	});
+	
+}, 1000 * 30);
