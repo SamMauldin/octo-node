@@ -1,5 +1,5 @@
 #!/usr/bin/env node
-var version = 2;
+var version = 3;
 
 console.log("Octo-Node v" + version + " starting...");
 
@@ -43,6 +43,7 @@ s.bind(cfg.server.port, cfg.server.host, function() {
 	console.log("Sending letters...");
 	
 	peers.forEach(function(v) {
+		ev.emit("peer", v.ip);
 		tools.registerPeer(v.ip, cfg, s);
 	});
 	
@@ -84,6 +85,7 @@ commands.register = function(args, rinfo) {
 		});
 		
 		console.log("Registered " + rinfo.address);
+		ev.emit("peer", rinfo.address);
 		console.log("Taking over world with " + peers.length + " friend(s)...");
 	}
 };
