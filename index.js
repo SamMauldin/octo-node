@@ -1,5 +1,5 @@
 #!/usr/bin/env node
-var version = 1;
+var version = 2;
 
 console.log("Octo-Node v" + version + " starting...");
 
@@ -15,6 +15,9 @@ var dgram = require("dgram");
 var s = dgram.createSocket("udp4");
 
 console.log("Drawing plans...");
+
+var evemitter = require("events").EventEmitter;
+var ev = new evemitter;
 
 var peers = [];
 var messages = [];
@@ -176,6 +179,8 @@ commands.spreadmessage = function(args, rinfo) {
 					"args": [args[0], args[1]]
 				});
 			});
+			
+			ev.emit("message", args[1], args[0]);
 		}
 	}
 }
@@ -230,3 +235,16 @@ setInterval(function() {
 		});
 	});
 }, 1000 * 60);
+
+module.exports = ev;
+
+module.exports.sendMessage = function(msg) {
+	var id = uuid();
+	peers.forEach(function(v) {
+		tools.sendToPeer(v.ip, cfg, s, {
+			"octo-node": "hello",
+			"cmd": "spreadmessage",
+			"args": [id, msg]
+		});
+	});
+};
