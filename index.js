@@ -90,6 +90,40 @@ commands.pong = function(args, rinfo) {
 	});
 }
 
+commands.getpeerlist = function(args, rinfo) {
+	var newpeers = [];
+	peers.forEach(function(v) {
+		if (rinfo.address != v.ip && (!v.client)) {
+			newpeers.push(v);
+		}
+	});
+	
+	tools.sendToPeer(rinfo.address, cfg, s, {
+		"p2pnode": "hello",
+		"cmd": "peerlist",
+		"args": [newpeers]
+	});
+};
+
+commands.peerlist = function(args, rinfo) {
+	if (args[0]) {
+		args[0].forEach(function(np) {
+			peers.forEach(function(p) {
+				if (p.ip != np.ip) {
+					if (peers.length < cfg.peers.max) {
+						peers.push({
+							ip: p.ip,
+							client: false,
+							ping: true
+						});
+						console.log("Taking over world with " + peers.length + " friend(s)...");
+					}
+				}
+			});
+		});
+	}
+}
+
 commands.err = function(args, rinfo) {
 	console.log("Error from " + rinfo.address + ": " + args[0]);
 };
