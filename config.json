@@ -4,6 +4,6 @@
 	},
 	"peers": {
 		"max": 2,
-		"initial": ["pi.lan.fluidnode.com"]
+		"initial": []
 	}
 }
