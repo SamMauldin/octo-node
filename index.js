@@ -115,12 +115,12 @@ commands.peerlist = function(args, rinfo) {
 				if (p.ip != np.ip) {
 					if (peers.length < cfg.peers.max) {
 						peers.push({
-							ip: p.ip,
+							ip: np.ip,
 							client: false,
 							ping: true
 						});
-						tools.registerPeer(p.ip, cfg, s);
-						console.log("Registered " + p.ip);
+						tools.registerPeer(np.ip, cfg, s);
+						console.log("Registered " + np.ip);
 						console.log("Taking over world with " + peers.length + " friend(s)...");
 					}
 				}
