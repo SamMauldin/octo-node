@@ -1,6 +1,6 @@
 function sendToPeer(ip, port, sock, msg) {
 	var buf = new Buffer(JSON.stringify(msg));
-	sock.send(buf, 0, buf.length, port, ip);
+	sock.c.send(buf, 0, buf.length, port, ip);
 }
 
 function registerPeer(ip, port, sock) {
