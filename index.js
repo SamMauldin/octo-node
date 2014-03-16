@@ -49,7 +49,7 @@ commands.register = function(args, rinfo) {
 	});
 	
 	if (!found) {
-		if (peers.length == cfg.peers.max) {
+		if (peers.length >= cfg.peers.max) {
 			tools.sendToPeer(rinfo.address, cfg.server.port, sock, {
 				"p2pnode": "hello",
 				"cmd": "err",
