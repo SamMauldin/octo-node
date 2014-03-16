@@ -73,7 +73,6 @@ commands.register = function(args, rinfo) {
 commands.ping = function(args, rinfo) {
 	peers.forEach(function(v) {
 		if (v.ip == rinfo.address) {
-			console.log("Got pinged");
 			tools.sendToPeer(rinfo.address, cfg, s, {
 				"p2pnode": "hello",
 				"cmd": "pong",
@@ -86,7 +85,6 @@ commands.ping = function(args, rinfo) {
 commands.pong = function(args, rinfo) {
 	peers.forEach(function(v) {
 		if (v.ip == rinfo.address) {
-			console.log("Got pong");
 			v.ping = true;
 		}
 	});
