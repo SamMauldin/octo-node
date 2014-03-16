@@ -47,6 +47,7 @@ commands.register = function(args, rinfo) {
 			found = true;
 		}
 	});
+	
 	if (!found) {
 		if (peers.length == cfg.peers.max) {
 			tools.sendToPeer(rinfo.address, cfg.server.port, sock, {
@@ -56,9 +57,11 @@ commands.register = function(args, rinfo) {
 			});
 			return;
 		}
+		
 		peers.push({
 			ip: v.address
 		});
+		
 		console.log("Taking over world with " + peers.length + " friend(s)...");
 	}
 };
@@ -71,6 +74,7 @@ s.on("message", function(buf, rinfo) {
 	var msg = JSON.parse(buf.toString());
 	if (msg) {
 		if (msg["p2pnode"] && msg["cmd"]) {
+			console.log(msg);
 			if (commands[msg["cmd"]]) {
 				commands[msg["cmd"]](msg["args"], rinfo);
 			}
