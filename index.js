@@ -7,9 +7,7 @@ var cfg = require("./config");
 var tools = require("./tools");
 var dgram = require("dgram");
 
-var s = {};
-s.s = dgram.createSocket("udp4");
-s.c = dgram.createSocket("udp4");
+var s = dgram.createSocket("udp4");
 
 console.log("Drawing plans...");
 
@@ -21,7 +19,7 @@ if (process.argv[2]) {
 
 console.log("Building tools...");
 
-s.s.bind(cfg.server.port, cfg.server.host, function() {
+s.bind(cfg.server.port, cfg.server.host, function() {
 
 	console.log("Writing letters...");
 	
@@ -72,7 +70,7 @@ commands.err = function(args, rinfo) {
 	console.log("Error from " + rinfo.address + ": " + args[0]);
 };
 
-s.s.on("message", function(buf, rinfo) {
+s.on("message", function(buf, rinfo) {
 	var msg = JSON.parse(buf.toString());
 	if (msg) {
 		if (msg["p2pnode"] && msg["cmd"]) {
