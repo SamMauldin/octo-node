@@ -25,7 +25,9 @@ s.bind(cfg.server.port, cfg.server.host, function() {
 	
 	cfg.peers.initial.forEach(function(v) {
 		peers.push({
-			ip: v
+			ip: v,
+			client: false,
+			ping: true
 		});
 	});
 	
