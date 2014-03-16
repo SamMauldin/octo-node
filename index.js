@@ -118,7 +118,9 @@ setInterval(function() {
 	
 	peers = newpeers;
 	
-	console.log("Taking over world with " + peers.length + " friend(s)...");
+	if (disconn) {
+		console.log("Taking over world with " + peers.length + " friend(s)...");
+	}
 	
 	peers.forEach(function(v) {
 		tools.sendToPeer(v.ip, cfg.server.port, s, {
