@@ -144,7 +144,7 @@ commands.spreadmessage = function(args, rinfo) {
 		
 		if (!found) {
 			console.log(args[1]);
-			message.push({
+			messages.push({
 				id: args[0],
 				msg: args[1]
 			});
