@@ -1,0 +1,9 @@
+{
+	"server": {
+		"port": 42042
+	},
+	"peers": {
+		"max": 2,
+		"initial": ["pi.lan.fluidnode.com"]
+	}
+}
