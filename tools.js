@@ -1,13 +1,13 @@
-function sendToPeer(ip, port, sock, msg) {
+function sendToPeer(ip, cfg, sock, msg) {
 	var buf = new Buffer(JSON.stringify(msg));
-	sock.send(buf, 0, buf.length, port, ip);
+	sock.send(buf, 0, buf.length, cfg.server.port, ip);
 }
 
-function registerPeer(ip, port, sock) {
-	sendToPeer(ip, port, sock, {
+function registerPeer(ip, cfg, sock) {
+	sendToPeer(ip, cfg, sock, {
 		"p2pnode": "hello",
 		"cmd": "register",
-		"args": []
+		"args": cfg.server.client ? ["client"] : []
 	});
 }
 

@@ -32,7 +32,7 @@ s.bind(cfg.server.port, cfg.server.host, function() {
 	console.log("Sending letters...");
 	
 	peers.forEach(function(v) {
-		tools.registerPeer(v.ip, cfg.server.port, s);
+		tools.registerPeer(v.ip, cfg, s);
 	});
 	
 	console.log("Taking over world with " + peers.length + " friend(s)...");
@@ -50,7 +50,7 @@ commands.register = function(args, rinfo) {
 	
 	if (!found) {
 		if (peers.length >= cfg.peers.max) {
-			tools.sendToPeer(rinfo.address, cfg.server.port, s, {
+			tools.sendToPeer(rinfo.address, cfg, s, {
 				"p2pnode": "hello",
 				"cmd": "err",
 				"args": ["Max peers reached"]
@@ -60,6 +60,7 @@ commands.register = function(args, rinfo) {
 		
 		peers.push({
 			ip: rinfo.address,
+			client: args[0] == "client",
 			ping: true
 		});
 		
@@ -70,7 +71,7 @@ commands.register = function(args, rinfo) {
 commands.ping = function(args, rinfo) {
 	peers.forEach(function(v) {
 		if (v.ip == rinfo.address) {
-			tools.sendToPeer(rinfo.address, cfg.server.port, s, {
+			tools.sendToPeer(rinfo.address, cfg, s, {
 				"p2pnode": "hello",
 				"cmd": "pong",
 				"args": []
@@ -123,7 +124,7 @@ setInterval(function() {
 	}
 	
 	peers.forEach(function(v) {
-		tools.sendToPeer(v.ip, cfg.server.port, s, {
+		tools.sendToPeer(v.ip, cfg, s, {
 			"p2pnode": "hello",
 			"cmd": "ping",
 			"args": []
