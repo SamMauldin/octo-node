@@ -59,7 +59,7 @@ commands.register = function(args, rinfo) {
 		}
 		
 		peers.push({
-			ip: v.address
+			ip: rinfo.address
 		});
 		
 		console.log("Taking over world with " + peers.length + " friend(s)...");
