@@ -121,7 +121,7 @@ setInterval(function() {
 	console.log("Taking over world with " + peers.length + " friend(s)...");
 	
 	peers.forEach(function(v) {
-		tools.sendToPeer(rinfo.address, cfg.server.port, s, {
+		tools.sendToPeer(v.ip, cfg.server.port, s, {
 			"p2pnode": "hello",
 			"cmd": "ping",
 			"args": []
