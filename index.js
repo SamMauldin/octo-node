@@ -1,9 +1,12 @@
 #!/usr/bin/env node
-console.log("Octo-Node starting...");
+var version = 1;
+
+console.log("Octo-Node v" + version + " starting...");
 
 console.log("Acquiring assets...");
 
 var cfg = require("./config");
+cfg.version = version;
 var tools = require("./tools");
 var uuid = require("node-uuid");
 var os = require("os");
@@ -46,6 +49,14 @@ s.bind(cfg.server.port, cfg.server.host, function() {
 var commands = {};
 
 commands.register = function(args, rinfo) {
+	if (args[1] != version) {
+		tools.sendToPeer(rinfo.address, cfg, s, {
+			"octo-node": "hello",
+			"cmd": "err",
+			"args": ["Wrong version"]
+		});
+		return;
+	}
 	var found = false;
 	peers.forEach(function(v) {
 		if (v.ip == rinfo.address) {
@@ -69,6 +80,7 @@ commands.register = function(args, rinfo) {
 			ping: true
 		});
 		
+		console.log("Registered " + rinfo.address);
 		console.log("Taking over world with " + peers.length + " friend(s)...");
 	}
 };
@@ -111,20 +123,26 @@ commands.getpeerlist = function(args, rinfo) {
 commands.peerlist = function(args, rinfo) {
 	if (args[0]) {
 		args[0].forEach(function(np) {
+			var found = false;
 			peers.forEach(function(p) {
-				if (p.ip != np.ip) {
-					if (peers.length < cfg.peers.max) {
-						peers.push({
-							ip: np.ip,
-							client: false,
-							ping: true
-						});
-						tools.registerPeer(np.ip, cfg, s);
-						console.log("Registered " + np.ip);
-						console.log("Taking over world with " + peers.length + " friend(s)...");
-					}
+				if (p.ip == np.ip) {
+					found = true;
 				}
 			});
+			
+			if (!found) {
+				if (peers.length < cfg.peers.max) {
+					peers.push({
+						ip: np.ip,
+						client: false,
+						ping: true
+					});
+					
+					tools.registerPeer(np.ip, cfg, s);
+					console.log("Registered " + np.ip);
+					console.log("Taking over world with " + peers.length + " friend(s)...");
+				}
+			}
 		});
 	}
 }

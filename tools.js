@@ -7,7 +7,7 @@ function registerPeer(ip, cfg, sock) {
 	sendToPeer(ip, cfg, sock, {
 		"octo-node": "hello",
 		"cmd": "register",
-		"args": cfg.server.client ? ["client"] : []
+		"args": cfg.server.client ? ["client", cfg.version] : ["node", cfg.version]
 	});
 }
 
