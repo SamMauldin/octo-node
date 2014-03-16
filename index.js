@@ -1,3 +1,4 @@
+#!/usr/bin/env node
 console.log("P2PNode starting...");
 
 console.log("Acquiring assets...");
@@ -12,6 +13,10 @@ console.log("Drawing plans...");
 
 var peers = [];
 
+if (process.argv[2]) {
+	cfg.peers.initial.push(process.argv[2]);
+}
+
 console.log("Building tools...");
 
 s.bind(cfg.server.port, function() {
@@ -19,7 +24,6 @@ s.bind(cfg.server.port, function() {
 	console.log("Writing letters...");
 	
 	cfg.peers.initial.forEach(function(v) {
-		s.addMembership(v);
 		peers.push(v);
 	});
 	
@@ -29,7 +33,7 @@ s.bind(cfg.server.port, function() {
 		tools.registerPeer(v, cfg.server.port, s);
 	});
 	
-	console.log("Taking over world...");
+	console.log("Taking over world with " + peers.length + " friend(s)...");
 });
 
 var commands = {};
