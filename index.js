@@ -84,7 +84,7 @@ commands.ping = function(args, rinfo) {
 commands.pong = function(args, rinfo) {
 	peers.forEach(function(v) {
 		if (v.ip == rinfo.address) {
-			print("Got pong");
+			console.log("Got pong");
 			v.ping = true;
 		}
 	});
