@@ -119,6 +119,7 @@ commands.peerlist = function(args, rinfo) {
 							client: false,
 							ping: true
 						});
+						tools.registerPeer(p.ip, cfg, s);
 						console.log("Taking over world with " + peers.length + " friend(s)...");
 					}
 				}
@@ -210,14 +211,3 @@ setInterval(function() {
 		});
 	});
 }, 1000 * 60);
-
-setInterval(function() {
-	peers.forEach(function(v) {
-		var id = uuid();
-		tools.sendToPeer(v.ip, cfg, s, {
-			"octo-node": "hello",
-			"cmd": "spreadmessage",
-			"args": [id, "This is a test message from " + os.hostname()]
-		});
-	});
-}, 1000 * 30);
