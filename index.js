@@ -1,10 +1,12 @@
 #!/usr/bin/env node
-console.log("P2PNode starting...");
+console.log("Octo-Node starting...");
 
 console.log("Acquiring assets...");
 
 var cfg = require("./config");
 var tools = require("./tools");
+var uuid = require("node-uuid");
+var os = require("os");
 var dgram = require("dgram");
 
 var s = dgram.createSocket("udp4");
@@ -12,6 +14,7 @@ var s = dgram.createSocket("udp4");
 console.log("Drawing plans...");
 
 var peers = [];
+var messages = [];
 
 if (process.argv[2]) {
 	cfg.peers.initial.push(process.argv[2]);
@@ -53,7 +56,7 @@ commands.register = function(args, rinfo) {
 	if (!found) {
 		if (peers.length >= cfg.peers.max) {
 			tools.sendToPeer(rinfo.address, cfg, s, {
-				"p2pnode": "hello",
+				"octo-node": "hello",
 				"cmd": "err",
 				"args": ["Max peers reached"]
 			});
@@ -74,7 +77,7 @@ commands.ping = function(args, rinfo) {
 	peers.forEach(function(v) {
 		if (v.ip == rinfo.address) {
 			tools.sendToPeer(rinfo.address, cfg, s, {
-				"p2pnode": "hello",
+				"octo-node": "hello",
 				"cmd": "pong",
 				"args": []
 			});
@@ -99,7 +102,7 @@ commands.getpeerlist = function(args, rinfo) {
 	});
 	
 	tools.sendToPeer(rinfo.address, cfg, s, {
-		"p2pnode": "hello",
+		"octo-node": "hello",
 		"cmd": "peerlist",
 		"args": [newpeers]
 	});
@@ -128,10 +131,39 @@ commands.err = function(args, rinfo) {
 	console.log("Error from " + rinfo.address + ": " + args[0]);
 };
 
+commands.spreadmessage = function(args, rinfo) {
+	if (args[0] && args[1]) {
+	
+		var found = false;
+		
+		messages.forEach(function(v) {
+			if (v.id == args[0]) {
+				found = true;
+			}
+		});
+		
+		if (!found) {
+			console.log(args[1]);
+			message.push({
+				id: args[0],
+				msg: args[1]
+			});
+			
+			peers.forEach(function(v) {
+				tools.sendToPeer(v.ip, cfg, s, {
+					"octo-node": "hello",
+					"cmd": "spreadmessage",
+					"args": [args[0], args[1]]
+				});
+			});
+		}
+	}
+}
+
 s.on("message", function(buf, rinfo) {
 	var msg = JSON.parse(buf.toString());
 	if (msg) {
-		if (msg["p2pnode"] && msg["cmd"]) {
+		if (msg["octo-node"] && msg["cmd"]) {
 			if (commands[msg["cmd"]]) {
 				commands[msg["cmd"]](msg["args"], rinfo);
 			}
@@ -161,7 +193,7 @@ setInterval(function() {
 	
 	peers.forEach(function(v) {
 		tools.sendToPeer(v.ip, cfg, s, {
-			"p2pnode": "hello",
+			"octo-node": "hello",
 			"cmd": "ping",
 			"args": []
 		});
@@ -172,9 +204,20 @@ setInterval(function() {
 setInterval(function() {
 	peers.forEach(function(v) {
 		tools.sendToPeer(v.ip, cfg, s, {
-			"p2pnode": "hello",
+			"octo-node": "hello",
 			"cmd": "getpeerlist",
 			"args": []
 		});
 	});
 }, 1000 * 60);
+
+setInterval(function() {
+	peers.forEach(function(v) {
+		var id = uuid();
+		tools.sendToPeer(v.ip, cfg, s, {
+			"octo-node": "hello",
+			"cmd": "spreadmessage",
+			"args": [id, "This is a test message from " + os.hostname()]
+		});
+	});
+}, 1000 * 30);

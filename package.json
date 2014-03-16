@@ -1,5 +1,7 @@
 {
 	"name": "octo-node",
 	"version": "0.0.1",
-	"dependencies": {}
+	"dependencies": {
+		"node-uuid": "*"
+	}
 }
