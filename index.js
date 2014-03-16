@@ -168,3 +168,13 @@ setInterval(function() {
 	});
 	
 }, 1000 * 15);
+
+setInterval(function() {
+	peers.forEach(function(v) {
+		tools.sendToPeer(v.ip, cfg, s, {
+			"p2pnode": "hello",
+			"cmd": "getpeerlist",
+			"args": []
+		});
+	});
+}, 1000 * 60);
