@@ -1,11 +1,11 @@
 {
 	"server": {
 		"port": 42042,
-		"address": "0.0.0.0",
-		"maxPeers": 5
+		"host": "0.0.0.0",
+		"client": false
 	},
-	"seeds": [{
-		"port": 42042,
-		"address": "5.175.134.238"
-	}]
+	"peers": {
+		"max": 2,
+		"initial": []
+	}
 }

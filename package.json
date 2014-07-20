@@ -1,8 +1,7 @@
 {
 	"name": "octo-node",
-	"version": "0.0.2",
+	"version": "0.0.1",
 	"dependencies": {
-		"smokesignal": "0.2.1"
-	},
-	"main": "init.js"
+		"node-uuid": "*"
+	}
 }
