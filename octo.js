@@ -1,5 +1,5 @@
 #!/usr/bin/env node
-var version = 5;
+var version = 6;
 
 console.log("Octo-Node v" + version + " starting...");
 
@@ -33,12 +33,14 @@ function sendToID(id, msg) {
 	});
 }
 
-function registerPeer(addr) {
+function registerPeer(addr, id) {
 	sendToIP(addr, {
 		cmd: "register",
 		args: {
 			ips: ips,
-			from: nodeid
+			from: nodeid,
+			leech: cfg.leech,
+			to: id
 		}
 	});
 }
@@ -81,24 +83,61 @@ commands.pong = function(args, peer) {
 };
 
 commands.register = function(args, rinfo) {
-	if (args.ips && args.from) {
+	if (args.ips && args.from && args.leech) {
 		if (peers.length >= cfg.maxPeers) { return; }
 		peers.push({
 			ping: true,
 			ip: rinfo.address,
 			ips: args.ips,
-			id: args.from
+			id: args.from,
+			leech: args.leech
 		});
 		registerPeer(rinfo.address);
 		announcePeers(args.from);
 	}
 };
 
+commands.peerlist = function(args, peer) {
+	if (args.peers) {
+		args.peers.forEach(function(v) {
+			var found = false;
+			peers.forEach(function(vpeer) {
+				if (vpeer.id == v.id) {
+					found = true;
+				}
+			});
+			if (!found) {
+				v.ips.forEach(function(vip) {
+					registerPeer(vip, v.id);
+				});
+			}
+		});
+	}
+};
+
+commands.getpeerlist = function(args, peer) {
+	var sendpeers = [];
+	peers.forEach(function(v) {
+		if (!v.leech && v.id != peer.id) {
+			sendpeers.push(v);
+		}
+	});
+	sendToID(peer.id, {
+		cmd: "peerlist",
+		args: sendpeers
+	});
+};
+
 s.on("message", function(buf, rinfo) {
 	var msg = JSON.parse(buf.toString());
 	if (msg) {
 		if (msg["octo"] && msg["cmd"] && msg["from"] && msg["version"]) {
-			if (commands[msg["cmd"]] && msg["version"] == cfg.version) {
+			if (commands[msg["cmd"]] && Math.floor(msg["version"]) == Math.floor(cfg.version)) {
+				if(msg["to"]) {
+					if(msg["to"] != nodeid) {
+						return;
+					}
+				}
 				if (msg["cmd"] != "register") {
 					peers.forEach(function(v) {
 						if (v.ip == rinfo.address && v.id == msg["from"]) {
@@ -137,4 +176,12 @@ setInterval(function() {
 			peers = newPeers;
 		}
 	});
-}, 1000 * 15);
+}, 1000 * 5);
+
+setInterval(function() {
+	peers.forEach(function(peer) {
+		sendToID(peer.id, {
+			cmd: "getpeerlist"
+		});
+	});
+});
