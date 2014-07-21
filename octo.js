@@ -135,6 +135,7 @@ s.on("message", function(buf, rinfo) {
 			if (commands[msg["cmd"]] && msg["version"] == cfg.version) {
 				if(msg["to"]) {
 					if(msg["to"] != nodeid) {
+						console.log("Got message not for me");
 						return;
 					}
 				}
