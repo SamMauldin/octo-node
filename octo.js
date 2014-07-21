@@ -188,7 +188,7 @@ setInterval(function() {
 			toRemove.forEach(function(id) {
 				var newPeers = [];
 				peers.forEach(function(peer) {
-					if (peer.id ~= id) {
+					if (peer.id != id) {
 						newPeers.push(JSON.parse(JSON.stringify(peer)));
 					}
 				});
