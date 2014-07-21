@@ -1,9 +1,7 @@
 #!/usr/bin/env node
-var version = 14;
+var version = 15;
 
 console.log("Octo-Node v" + version + " starting...");
-
-console.log("Waking up...");
 
 var cfg = require("./config");
 cfg.version = version;
@@ -62,20 +60,18 @@ function registerPeer(addr, id) {
 
 function announcePeers(peer) {
 	if (peer) {
-		console.log(peer + " joined : " + peers.length + " total peers");
+		console.log(peer + " connected : " + peers.length + " total peers");
 	} else {
-		console.log("Taking over the world with " + peers.length + " friend(s)");
+		console.log("Connected to " + peers.length + " peer(s)");
 	}
 }
 
 function start() {
-	console.log("Planning...");
 	s.bind(42042, "0.0.0.0", function() {
-		console.log("Writing letters...");
 		cfg.seeds.forEach(function(v) {
 			registerPeer(v);
 		});
-		console.log("Letters mailed to " + cfg.seeds.length + " friend(s)");
+		console.log("Pinged " + cfg.seeds.length + " peers(s)");
 		console.log("Now accepting incoming connections");
 	});
 }
@@ -137,13 +133,16 @@ commands.spreadmessage = function(args, peer) {
 	if (args["msg"] && args["msgid"]) {
 		if (!msgs[args["msgid"]]) {
 			msgs[args["msgid"]] = true;
-			ev.emit("message", args["msg"], args["msgid"]);
+			ev.emit("message", args["msg"], args["msgid"], args["core"]);
 			peers.forEach(function(v) {
 				sendToID(v.id, {
 					cmd: "spreadmessage",
 					args: args
 				});
 			});
+			if (!args["core"]) {
+				console.log(args["msg"]);
+			}
 		}
 	}
 };
@@ -232,10 +231,11 @@ if (!cfg.leech) {
 
 // API
 
-function sendMessage(msg) {
+function sendMessage(msg, core) {
 	commands.spreadmessage({
 		msg: msg,
-		msgid: uuid()
+		msgid: uuid(),
+		core: core
 	});
 }
 
