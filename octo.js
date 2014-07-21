@@ -1,5 +1,5 @@
 #!/usr/bin/env node
-var version = 10;
+var version = 11;
 
 console.log("Octo-Node v" + version + " starting...");
 
@@ -175,21 +175,26 @@ s.on("message", function(buf, rinfo) {
 });
 
 setInterval(function() {
-	console.log(peers);
-	var newPeers = [];
+	var toRemove = [];
 	peers.forEach(function(peer) {
 		if (peer.ping) {
 			peer.ping = false;
 			sendToID(peer.id, {
 				cmd: "ping"
 			});
-			newPeers.push(peer);
+			toRemove.push(peer.id);
 		}
-		if (peers.length != newPeers.length) {
-			peers = newPeers;
+		if (toRemove.length > 0) {
+			toRemove.forEach(function(id) {
+				var newPeers = [];
+				peers.forEach(function(peer) {
+					if (peer.id ~= id) {
+						newPeers.push(JSON.parse(JSON.stringify(peer)));
+					}
+				});
+				peers = newPeers;
+			});
 			announcePeers();
-		} else {
-			peers = newPeers;
 		}
 	});
 }, 1000 * 5);
