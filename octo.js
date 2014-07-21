@@ -1,5 +1,5 @@
 #!/usr/bin/env node
-var version = 13;
+var version = 14;
 
 console.log("Octo-Node v" + version + " starting...");
 
@@ -109,6 +109,7 @@ commands.register = function(args, rinfo) {
 		});
 		registerPeer(rinfo.address);
 		announcePeers(args.from);
+		ev.emit("peer", args.from);
 	}
 };
 
@@ -201,6 +202,7 @@ setInterval(function() {
 				cmd: "ping"
 			});
 		} else {
+			ev.emit("disconnect", peer.id);
 			toRemove.push(peer.id);
 		}
 		if (toRemove.length > 0) {

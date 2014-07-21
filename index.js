@@ -4,6 +4,6 @@ octo.on("message", function(msg) {
 	console.log(msg);
 });
 
-setTimeout(function() {
-	octo.sendMessage("It's a me! " + octo.id + "!");
-}, 5000);
+octo.once("peer", function() (
+	octo.sendMessage(octo.id + " joined the network");
+});
