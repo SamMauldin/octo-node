@@ -1,5 +1,5 @@
 #!/usr/bin/env node
-var version = 9;
+var version = 10;
 
 console.log("Octo-Node v" + version + " starting...");
 
@@ -141,6 +141,7 @@ commands.getpeerlist = function(args, peer) {
 
 s.on("message", function(buf, rinfo) {
 	var msg = JSON.parse(buf.toString());
+	debug(buf.toString());
 	if (msg) {
 		if (msg["octo"] && msg["cmd"] && msg["from"] && msg["version"]) {
 			if (commands[msg["cmd"]] && msg["version"] == cfg.version) {
