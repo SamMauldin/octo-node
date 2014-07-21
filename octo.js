@@ -135,4 +135,4 @@ setInterval(function() {
 		}
 		peers = newPeers;
 	});
-}, 1000 * 60);
+}, 1000 * 15);
