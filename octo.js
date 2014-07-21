@@ -131,8 +131,10 @@ setInterval(function() {
 			newPeers.push(peer);
 		}
 		if (peers.length != newPeers.length) {
+			peers = newPeers;
 			announcePeers();
+		} else {
+			peers = newPeers;
 		}
-		peers = newPeers;
 	});
 }, 1000 * 15);
