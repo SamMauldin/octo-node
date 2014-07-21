@@ -35,7 +35,6 @@ s.bind(cfg.server.port, cfg.server.host, function() {
 	cfg.peers.initial.forEach(function(v) {
 		peers.push({
 			ip: v,
-			client: false,
 			ping: true
 		});
 	});
@@ -80,7 +79,6 @@ commands.register = function(args, rinfo) {
 		
 		peers.push({
 			ip: rinfo.address,
-			client: args[0] == "client",
 			ping: true
 		});
 		
@@ -113,7 +111,7 @@ commands.pong = function(args, rinfo) {
 commands.getpeerlist = function(args, rinfo) {
 	var newpeers = [];
 	peers.forEach(function(v) {
-		if (rinfo.address != v.ip && (!v.client)) {
+		if (rinfo.address != v.ip) {
 			newpeers.push(v);
 		}
 	});
@@ -139,7 +137,6 @@ commands.peerlist = function(args, rinfo) {
 				if (peers.length < cfg.peers.max) {
 					peers.push({
 						ip: np.ip,
-						client: false,
 						ping: true
 					});
 					
