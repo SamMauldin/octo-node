@@ -4,7 +4,9 @@ var wholenet = [];
 
 octo.on("message", function(msg, core) {
 	if (core) {
-		var msg = JSON.parse(msg);
+		try {
+			var msg = JSON.parse(msg);
+		} catch (e) { }
 		if (msg) {
 			if (msg["id"]) {
 				var found = false;
