@@ -41,6 +41,7 @@ function sendToID(id, msg) {
 	});
 	if (!found) {
 		debug("Failed to send message to " + id);
+		console.log(peers);
 	}
 }
 
@@ -141,7 +142,6 @@ commands.getpeerlist = function(args, peer) {
 
 s.on("message", function(buf, rinfo) {
 	var msg = JSON.parse(buf.toString());
-	debug(buf.toString());
 	if (msg) {
 		if (msg["octo"] && msg["cmd"] && msg["from"] && msg["version"]) {
 			if (commands[msg["cmd"]] && msg["version"] == cfg.version) {
