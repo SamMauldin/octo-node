@@ -1,5 +1,5 @@
 #!/usr/bin/env node
-var version = 6;
+var version = 7;
 
 console.log("Octo-Node v" + version + " starting...");
 
@@ -39,9 +39,9 @@ function registerPeer(addr, id) {
 		args: {
 			ips: ips,
 			from: nodeid,
-			leech: cfg.leech,
-			to: id
-		}
+			leech: cfg.leech
+		},
+		to: id
 	});
 }
 
@@ -98,7 +98,7 @@ commands.register = function(args, rinfo) {
 };
 
 commands.peerlist = function(args, peer) {
-	if (args.peers) {
+	if (args.peers && !cfg.leech) {
 		args.peers.forEach(function(v) {
 			var found = false;
 			peers.forEach(function(vpeer) {
@@ -132,7 +132,7 @@ s.on("message", function(buf, rinfo) {
 	var msg = JSON.parse(buf.toString());
 	if (msg) {
 		if (msg["octo"] && msg["cmd"] && msg["from"] && msg["version"]) {
-			if (commands[msg["cmd"]] && Math.floor(msg["version"]) == Math.floor(cfg.version)) {
+			if (commands[msg["cmd"]] && msg["version"] == cfg.version) {
 				if(msg["to"]) {
 					if(msg["to"] != nodeid) {
 						return;
@@ -178,10 +178,12 @@ setInterval(function() {
 	});
 }, 1000 * 5);
 
-setInterval(function() {
-	peers.forEach(function(peer) {
-		sendToID(peer.id, {
-			cmd: "getpeerlist"
+if (!cfg.leech) {
+	setInterval(function() {
+		peers.forEach(function(peer) {
+			sendToID(peer.id, {
+				cmd: "getpeerlist"
+			});
 		});
 	});
-});
+}
