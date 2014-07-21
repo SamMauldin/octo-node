@@ -17,6 +17,12 @@ var peers = [];
 
 var s = dgram.createSocket("udp4");
 
+function debug(msg) {
+	if (cfg.debug) {
+		console.log(msg);
+	}
+}
+
 function sendToIP(ip, msg) {
 	msg.octo = true;
 	msg.from = nodeid;
@@ -34,7 +40,7 @@ function sendToID(id, msg) {
 		}
 	});
 	if (!found) {
-		console.log("Failed to send message to " + id);
+		debug("Failed to send message to " + id);
 	}
 }
 
@@ -140,6 +146,7 @@ s.on("message", function(buf, rinfo) {
 			if (commands[msg["cmd"]] && msg["version"] == cfg.version) {
 				if(msg["to"]) {
 					if(msg["to"] != nodeid) {
+						debug("Received message ment for someone else");
 						return;
 					}
 				}
