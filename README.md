@@ -5,6 +5,7 @@ Octo-Node is a P2P networking library written in node.js
 Download
 ========
 In a terminal:
+
 	git clone https://github.com/Sxw1212/octo-node.git
 	npm install
 	cp example-config.json config.json
