@@ -26,11 +26,16 @@ function sendToIP(ip, msg) {
 }
 
 function sendToID(id, msg) {
+	var found = false;
 	peers.forEach(function(v) {
 		if (v.id == id) {
 			sendToIP(v.ip, msg);
+			found = true;
 		}
 	});
+	if (!found) {
+		console.log("Failed to send message to " + id);
+	}
 }
 
 function registerPeer(addr, id) {
@@ -80,11 +85,10 @@ commands.ping = function(args, peer) {
 
 commands.pong = function(args, peer) {
 	peer.ping = true;
-	console.log("Got pong");
 };
 
 commands.register = function(args, rinfo) {
-	if (args.ips && args.from && args.leech != null) {
+	if (args.ips && args.from) {
 		if (peers.length >= cfg.maxPeers) { return; }
 		peers.push({
 			ping: true,
