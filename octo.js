@@ -1,5 +1,5 @@
 #!/usr/bin/env node
-var version = 11;
+var version = 12;
 
 console.log("Octo-Node v" + version + " starting...");
 
@@ -182,6 +182,7 @@ setInterval(function() {
 			sendToID(peer.id, {
 				cmd: "ping"
 			});
+		} else {
 			toRemove.push(peer.id);
 		}
 		if (toRemove.length > 0) {
