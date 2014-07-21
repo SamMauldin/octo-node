@@ -41,6 +41,7 @@ function sendToID(id, msg) {
 	});
 	if (!found) {
 		debug("Failed to send message to " + id);
+		debug(JSON.toString(msg));
 		console.log(peers);
 	}
 }
