@@ -1,5 +1,5 @@
 #!/usr/bin/env node
-var version = 4;
+var version = 5;
 
 console.log("Octo-Node v" + version + " starting...");
 
@@ -43,8 +43,12 @@ function registerPeer(addr) {
 	});
 }
 
-function announcePeers() {
-	console.log("Taking over the world with " + peers.length + " friend(s)");
+function announcePeers(peer) {
+	if (peer) {
+		console.log(peer + " joined : " + peers.length + " total peers");
+	} else {
+		console.log("Taking over the world with " + peers.length + " friend(s)");
+	}
 }
 
 function start() {
@@ -67,11 +71,13 @@ tools.ipList(function(iplist) {
 var commands = {};
 
 commands.ping = function(args, peer) {
-
+	sendToID(peer.id, {
+		cmd: "pong"
+	});
 };
 
 commands.pong = function(args, peer) {
-
+	peer.ping = true;
 };
 
 commands.register = function(args, rinfo) {
@@ -84,6 +90,7 @@ commands.register = function(args, rinfo) {
 			id: args.from
 		});
 		registerPeer(rinfo.address);
+		announcePeers(args.from);
 	}
 };
 
@@ -112,3 +119,20 @@ s.on("message", function(buf, rinfo) {
 		}
 	}
 });
+
+setInterval(function() {
+	var newPeers = [];
+	peers.forEach(function(peer) {
+		if (peer.ping) {
+			peer.ping = false;
+			sendToID(peer.id, {
+				cmd: "ping"
+			});
+			newPeers.push(peer);
+		}
+		if (peers.length != newPeers.length) {
+			announcePeers();
+		}
+		peers = newPeers;
+	});
+}, 1000 * 60);
