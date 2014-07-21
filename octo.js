@@ -60,7 +60,7 @@ function registerPeer(addr, id) {
 
 function announcePeers(peer) {
 	if (peer) {
-		console.log(peer + " connected : " + peers.length + " total peers");
+		console.log(peer + " connected : " + peers.length + " total peer(s)");
 	} else {
 		console.log("Connected to " + peers.length + " peer(s)");
 	}
