@@ -1,5 +1,5 @@
 #!/usr/bin/env node
-var version = 7;
+var version = 8;
 
 console.log("Octo-Node v" + version + " starting...");
 
@@ -83,9 +83,7 @@ commands.pong = function(args, peer) {
 };
 
 commands.register = function(args, rinfo) {
-	console.log("Register called");
-	if (args.ips && args.from && args.leech) {
-		console.log("Met conditions");
+	if (args.ips && args.from && args.leech != null) {
 		if (peers.length >= cfg.maxPeers) { return; }
 		peers.push({
 			ping: true,
