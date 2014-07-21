@@ -107,6 +107,7 @@ commands.register = function(args, rinfo) {
 		});
 		registerPeer(rinfo.address);
 		announcePeers(args.from);
+		console.log(peers);
 	}
 };
 
