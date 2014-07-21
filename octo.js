@@ -220,11 +220,9 @@ setInterval(function() {
 }, 1000 * 5);
 
 setInterval(function() {
-	if (peers.length == 0) {
-		cfg.seeds.forEach(function(v) {
-			registerPeer(v);
-		});
-	}
+	cfg.seeds.forEach(function(v) {
+		registerPeer(v);
+	});
 }, 1000 * 10);
 
 if (!cfg.leech) {
