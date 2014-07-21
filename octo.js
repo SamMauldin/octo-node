@@ -80,6 +80,7 @@ commands.ping = function(args, peer) {
 
 commands.pong = function(args, peer) {
 	peer.ping = true;
+	console.log("Got pong");
 };
 
 commands.register = function(args, rinfo) {
