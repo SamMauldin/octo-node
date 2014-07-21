@@ -175,6 +175,7 @@ s.on("message", function(buf, rinfo) {
 });
 
 setInterval(function() {
+	console.log(peers);
 	var newPeers = [];
 	peers.forEach(function(peer) {
 		if (peer.ping) {
