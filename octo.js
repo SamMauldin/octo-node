@@ -1,5 +1,5 @@
 #!/usr/bin/env node
-var version = 8;
+var version = 9;
 
 console.log("Octo-Node v" + version + " starting...");
 
@@ -197,5 +197,5 @@ if (!cfg.leech) {
 				cmd: "getpeerlist"
 			});
 		});
-	});
+	}, 1000 * 60);
 }
