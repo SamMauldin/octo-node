@@ -83,7 +83,9 @@ commands.pong = function(args, peer) {
 };
 
 commands.register = function(args, rinfo) {
+	console.log("Register called");
 	if (args.ips && args.from && args.leech) {
+		console.log("Met conditions");
 		if (peers.length >= cfg.maxPeers) { return; }
 		peers.push({
 			ping: true,
@@ -145,7 +147,6 @@ s.on("message", function(buf, rinfo) {
 						}
 					});
 				} else {
-					console.log("Got register command");
 					var exit = false;
 					peers.forEach(function(v) {
 						if (v.ip == rinfo.address) {
