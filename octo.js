@@ -1,5 +1,5 @@
 #!/usr/bin/env node
-var version = 12;
+var version = 13;
 
 console.log("Octo-Node v" + version + " starting...");
 
@@ -12,6 +12,8 @@ var uuid = require("node-uuid");
 var nodeid = uuid();
 var os = require("os");
 var dgram = require("dgram");
+var EventEmitter = require("events").EventEmitter;
+var ev = new EventEmitter();
 var ips = null;
 var peers = [];
 
@@ -128,6 +130,23 @@ commands.peerlist = function(args, peer) {
 	}
 };
 
+var msgs = {};
+
+commands.spreadmessage = function(args, peer) {
+	if (args["msg"] && args["msgid"]) {
+		if (!msgs[args["msgid"]]) {
+			msgs[args["msgid"]] = true;
+			ev.emit("message", args["msg"], args["msgid"]);
+			peers.forEach(function(v) {
+				sendToID(v.id, {
+					cmd: "spreadmessage",
+					args: args
+				});
+			});
+		}
+	}
+};
+
 commands.getpeerlist = function(args, peer) {
 	var sendpeers = [];
 	peers.forEach(function(v) {
@@ -208,3 +227,16 @@ if (!cfg.leech) {
 		});
 	}, 1000 * 60);
 }
+
+// API
+
+function sendMessage(msg) {
+	commands.spreadmessage({
+		msg: msg,
+		msgid: uuid()
+	});
+}
+
+module.exports = ev;
+module.exports.id = nodeid;
+module.exports.sendMessage = sendMessage;
