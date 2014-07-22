@@ -5,11 +5,8 @@ var wholenet = [];
 
 octo.on("message", function(msg, core) {
 	if (core) {
-		try {
-			var msg = tools.unpack(msg);
-		} catch (e) { }
-		if (msg) {
-			if (msg["id"] && msg["ips"]) {
+		tools.unpack(msg, function(err, msg) {
+			if (msg && msg["id"] && msg["ips"]) {
 				var found = false;
 				wholenet.forEach(function(v) {
 					if (v.id == msg["id"]) {
@@ -25,7 +22,7 @@ octo.on("message", function(msg, core) {
 					});
 				}
 			}
-		}
+		});
 	}
 });
 
@@ -50,10 +47,16 @@ setInterval(function() {
 }, 1000 * 60);
 
 setInterval(function() {
-	octo.sendMessage(tools.pack({
+	tools.pack({
 		id: octo.id,
 		ips: octo.ips
-	}), true);
+	}, function(err, res) {
+		if (err) {
+			console.log(err);
+			return;
+		}
+		octo.sendMessage(res, true);
+	});
 }, 1000 * 30);
 
 octo.once("peer", function() {
