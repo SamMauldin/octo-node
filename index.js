@@ -66,4 +66,6 @@ module.exports.getNetwork = function() {
 	return wholenet;
 };
 
+// setInterval(function() { console.log(tools.getDataUsage()); }, 5000);
+
 module.exports.getDataUsage = tools.getDataUsage;
