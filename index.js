@@ -1,14 +1,16 @@
-var octo = require("./octo");
+var octo = require("./lib/octo");
+var tools = require("./lib/tools");
+var msgpack = require("msgpack");
 
 var wholenet = [];
 
 octo.on("message", function(msg, core) {
 	if (core) {
 		try {
-			var msg = JSON.parse(msg);
+			var msg = msgpack.unpack(msg);
 		} catch (e) { }
 		if (msg) {
-			if (msg["id"]) {
+			if (msg["id"] && msg["ips"]) {
 				var found = false;
 				wholenet.forEach(function(v) {
 					if (v.id == msg["id"]) {
@@ -19,7 +21,8 @@ octo.on("message", function(msg, core) {
 				if (!found) {
 					wholenet.push({
 						ping: true,
-						id: msg["id"]
+						id: msg["id"],
+						ips: msg["ips"]
 					});
 				}
 			}
@@ -45,12 +48,12 @@ setInterval(function() {
 		});
 		wholenet = newnet;
 	});
-	console.log("Approximate Netsize: " + wholenet.length);
 }, 1000 * 60);
 
 setInterval(function() {
-	octo.sendMessage(JSON.stringify({
-		id: octo.id
+	octo.sendMessage(msgpack.pack({
+		id: octo.id,
+		ips: octo.ips
 	}), true);
 }, 1000 * 30);
 
@@ -59,3 +62,9 @@ octo.once("peer", function() {
 });
 
 module.exports = octo;
+
+module.exports.getNetwork = function() {
+	return wholenet;
+};
+
+module.exports.getDataUsage = tools.getDataUsage;

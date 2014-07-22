@@ -2,7 +2,8 @@
 	"name": "octo-node",
 	"version": "1.0.0",
 	"dependencies": {
-		"node-uuid": "*",
-		"request": "*"
+		"node-uuid": "1.4.x",
+		"request": "2.38.x",
+		"msgpack": "0.2.x"
 	}
 }
