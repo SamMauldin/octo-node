@@ -7,7 +7,7 @@ Download
 In a terminal:
 
 	git clone https://github.com/Sxw1212/octo-node.git
-	npm install
+	npm install # C++ compiler required!
 	cp example-config.json config.json
 
 Use your favorite to edit config.json.

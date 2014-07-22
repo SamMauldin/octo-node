@@ -1,13 +1,12 @@
 var octo = require("./lib/octo");
 var tools = require("./lib/tools");
-var msgpack = require("msgpack");
 
 var wholenet = [];
 
 octo.on("message", function(msg, core) {
 	if (core) {
 		try {
-			var msg = msgpack.unpack(msg);
+			var msg = tools.unpack(msg);
 		} catch (e) { }
 		if (msg) {
 			if (msg["id"] && msg["ips"]) {
@@ -51,7 +50,7 @@ setInterval(function() {
 }, 1000 * 60);
 
 setInterval(function() {
-	octo.sendMessage(msgpack.pack({
+	octo.sendMessage(tools.pack({
 		id: octo.id,
 		ips: octo.ips
 	}), true);
