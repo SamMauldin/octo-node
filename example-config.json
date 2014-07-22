@@ -2,5 +2,6 @@
 	"maxPeers": 10,
 	"seeds": ["5.175.134.238"],
 	"leech": false,
-	"debug": false
+	"debug": false,
+	"netname": "testnet"
 }
