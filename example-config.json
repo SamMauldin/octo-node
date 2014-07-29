@@ -1,7 +1,8 @@
 {
 	"maxPeers": 10,
-	"seeds": ["5.175.134.238"],
+	"seeds": [["5.175.134.238", 42042]],
 	"leech": false,
 	"debug": false,
+	"port": 42042,
 	"netname": "testnet"
 }
