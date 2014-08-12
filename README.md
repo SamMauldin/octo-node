@@ -26,4 +26,4 @@ If not, you will need to port forward
 
 Running multiple nodes under one external IP
 ============================================
-You can run multiple nodes under one IP, but you will need to use a different port on each node. There are also some quicks when nodes are run with this.
+You can run multiple nodes under one IP, but you will need to use a different port on each node. There are also some quirks when nodes are run with this.
